@@ -1,0 +1,9 @@
+trigger:
+- test-branch
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- script: ./runTests.sh
+  displayName: 'Run Docker-compose'
