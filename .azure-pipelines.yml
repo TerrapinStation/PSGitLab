@@ -11,10 +11,10 @@ resources:
       - 8080:80
       - 8443:443
     volumes:
-      - ./docker/docker-entrypoint:/init/docker-entrypoint
-      - ./docker/init:/init/init
-      - ./docker/test.rb:/init/test.rb
-      - ./docker/config:/config
+      - $(Build.SourcesDirectory)/docker/docker-entrypoint:/init/docker-entrypoint
+      - $(Build.SourcesDirectory)/docker/init:/init/init
+      - $(Build.SourcesDirectory)/docker/test.rb:/init/test.rb
+      - $(Build.SourcesDirectory)/docker/config:/config
   - container: pwsh_container
     image: mcr.microsoft.com/powershell:latest
     env:
@@ -24,7 +24,7 @@ resources:
       - 8443:443
     volumes:
       - $(Build.SourcesDirectory):/PSGitlab
-      - ./docker/config:/config
+      - $(Build.SourcesDirectory)/docker/config:/config
 
 container: pwsh_container
 
