@@ -1,9 +1,41 @@
 trigger:
 - test-branch
 
+resources:
+  containers:
+  - container: gitlab
+    image: gitlab/gitlab-ce
+    env:
+      TRAVIS: true
+    ports:
+      - 8080:80
+      - 8443:443
+    volumes:
+      - ./docker/docker-entrypoint:/init/docker-entrypoint
+      - ./docker/init:/init/init
+      - ./docker/test.rb:/init/test.rb
+      - ./docker/config:/config
+  - container: pwsh_container
+    image: mcr.microsoft.com/powershell:latest
+    env:
+      TRAVIS: true
+    ports:
+      - 8080:80
+      - 8443:443
+    volumes:
+      - .:/PSGitlab
+      - ./docker/config:/config
+
+container: pwsh_container
+
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'ubuntu-16.04'
+
+services:
+  gitlab: gitlab
 
 steps:
-- script: ./runTests.sh
-  displayName: 'Run Docker-compose'
+- script: |
+    pwsh -c "Install-Module Pester,PSScriptAnalyzer,Psake -Scope CurrentUser -force";
+    pwsh -File /PSGitlab/run-tests.ps1
+  displayName: 'Run Tests'
