@@ -23,7 +23,7 @@ resources:
       - 8080:80
       - 8443:443
     volumes:
-      - $(PWD):/PSGitlab
+      - "$(Agent.BuildDirectory):/PSGitlab"
       - ./docker/config:/config
 
 container: pwsh_container
